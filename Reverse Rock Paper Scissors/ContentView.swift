@@ -7,10 +7,37 @@
 
 import SwiftUI
 
+class PlayerInfo: ObservableObject {
+    @Published var score = Int()
+    @Published var result = String()
+}
+
+class OperationHistory: ObservableObject {
+    @Published var array = [[String]]()
+}
+
 struct ContentView: View {
+    @StateObject var history = OperationHistory()
+    @StateObject var player = PlayerInfo()
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        TabView {
+            GameView()
+                .environmentObject(history)
+                .environmentObject(player)
+                .tabItem {
+                    Label("Game", systemImage: "gamecontroller")
+                }
+            
+            HistoryView()
+                .environmentObject(history)
+                .environmentObject(player)
+                .tabItem {
+                    Label("History", systemImage: "archivebox.fill")
+                }
+//                .badge(10)
+        }
+        .tabViewStyle(selectedItemColor: .primary, badgeColor: .red)
     }
 }
 
