@@ -8,36 +8,32 @@
 import SwiftUI
 
 class PlayerInfo: ObservableObject {
+    @Published var history = [[String]]()
     @Published var score = Int()
     @Published var result = String()
-}
-
-class OperationHistory: ObservableObject {
-    @Published var array = [[String]]()
+    @Published var question = 1
 }
 
 struct ContentView: View {
-    @StateObject var history = OperationHistory()
     @StateObject var player = PlayerInfo()
     
     var body: some View {
+        
         TabView {
             GameView()
-                .environmentObject(history)
                 .environmentObject(player)
                 .tabItem {
-                    Label("Game", systemImage: "gamecontroller")
+                    Label("Logic Game", systemImage: "gamecontroller")
                 }
             
             HistoryView()
-                .environmentObject(history)
                 .environmentObject(player)
                 .tabItem {
                     Label("History", systemImage: "archivebox.fill")
                 }
-//                .badge(10)
+                .badge(player.question - 1)
         }
-        .tabViewStyle(selectedItemColor: .primary, badgeColor: .red)
+        .tabViewStyle(selectedItemColor: .primary, badgeColor: .secondary)
     }
 }
 

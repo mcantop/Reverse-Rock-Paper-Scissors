@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct GameView: View {
-    @EnvironmentObject var history: OperationHistory
     @EnvironmentObject var player: PlayerInfo
     @State private var lastHistory = [String]()
     @State private var size: CGFloat = 0.5
-    @State private var roundNumber = 1
     @State private var winningMove = Int.random(in: 0...2)
     @State private var restartGameState = false
     @State private var endGameState = false
@@ -34,7 +32,7 @@ struct GameView: View {
             Text("🪨")
                 .font(.system(size: 200))
                 .rotationEffect(.degrees(400))
-                .offset(x: -200, y: -200)
+                .offset(x: -200, y: -400)
                 .blur(radius: 15)
                 .scaleEffect(size)
                 .onAppear() {
@@ -44,7 +42,7 @@ struct GameView: View {
             Text("🧻")
                 .font(.system(size: 200))
                 .rotationEffect(.degrees(220))
-                .offset(x: 200, y: 250)
+                .offset(x: 200, y: 100)
                 .blur(radius: 15)
                 .scaleEffect(size)
                 .onAppear() {
@@ -96,7 +94,7 @@ struct GameView: View {
                 .background(.ultraThinMaterial)
                 
                 HStack {
-                    Text("Round \(roundNumber)/10")
+                    Text("Round \(player.question)/10")
                 }
                 .font(.system(size: 20, design: .rounded))
                 .padding()
@@ -105,7 +103,7 @@ struct GameView: View {
                 .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 10)
                 
                 VStack {
-                    Text("AI chooses \(aiMoves[winningMove]) and it must ") +
+                    Text("AI chooses \(aiMoves[winningMove]) and has to ") +
                     Text(aiWin == true ? "win" : "lose")
                         .font(.title2.weight(.bold))
                     + Text(".")
@@ -115,7 +113,7 @@ struct GameView: View {
                                 .font(.system(size: 60))
                                 .padding(15)
                                 .background(
-                                    aiMoves.firstIndex(of: move) == winningMove ? ( aiWin == true ? .green.opacity(0.6) :  .red.opacity(0.5) ) : .white.opacity(0.3)
+                                    aiMoves.firstIndex(of: move) == winningMove ? ( aiWin == true ? .green.opacity(0.6) :  .red.opacity(0.5) ) : .white.opacity(0.0)
                                 )
                                 .cornerRadius(15)
                         }
@@ -179,20 +177,18 @@ struct GameView: View {
             player.result = "Wrong"
         }
         
-        lastHistory.append("\(roundNumber):")
+        lastHistory.append("\(player.question):")
         lastHistory.append(aiMove)
         lastHistory.append(aiWin == true ? "AI Win" : "AI Lose")
         lastHistory.append(playerMove)
         lastHistory.append(player.result)
-        
-        history.array.append(lastHistory)
+        player.history.append(lastHistory)
         lastHistory = [String]()
-        print(history.array)
         
         aiWin.toggle()
-        roundNumber += 1
-        if roundNumber == 11 {
-            roundNumber = 10
+        player.question += 1
+        if player.question == 11 {
+            player.question = 10
             endGameState = true
         } else {
             
@@ -206,11 +202,11 @@ struct GameView: View {
     
     func restartGame() {
         aiWin.toggle()
-        history.array = [[String]]()
+        player.history = [[String]]()
         player.result = ""
         withAnimation {
             player.score = 0
-            roundNumber = 1
+            player.question = 1
             winningMove = Int.random(in: 0...2)
             aiMoves = ["🪨", "🧻", "✂️"]
             playerMoves.shuffle()
@@ -218,8 +214,9 @@ struct GameView: View {
     }
 }
 
-//struct GameView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        GameView()
-//    }
-//}
+struct GameView_Previews: PreviewProvider {
+    static var previews: some View {
+        GameView()
+            .environmentObject(PlayerInfo())
+    }
+}
