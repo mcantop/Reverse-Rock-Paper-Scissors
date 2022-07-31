@@ -8,93 +8,29 @@
 import SwiftUI
 
 struct GameView: View {
-    @EnvironmentObject var player: PlayerInfo
-    @State private var lastHistory = [String]()
-    @State private var size: CGFloat = 0.5
-    @State private var winningMove = Int.random(in: 0...2)
-    @State private var restartGameState = false
+    @EnvironmentObject var game: Game
+    @State private var lastRoundHistory = [String]()
     @State private var endGameState = false
-    @State private var aiWin = false
-    @State private var aiMoves = ["🪨", "🧻", "✂️"]
-    @State private var playerMoves = ["🪨", "🧻", "✂️"].shuffled()
-    
-    private var repeatingAnimation: Animation {
-        Animation
-            .easeInOut(duration: 20)
-            .repeatForever()
-    }
+
     
     var body: some View {
-        ZStack {
-            LinearGradient(colors: [Color.gray.opacity(0.6), Color.gray.opacity(0.9)], startPoint: .topLeading, endPoint: .bottomTrailing)
-                .ignoresSafeArea()
-            
-            Text("🪨")
-                .font(.system(size: 200))
-                .rotationEffect(.degrees(400))
-                .offset(x: -200, y: -400)
-                .blur(radius: 15)
-                .scaleEffect(size)
-                .onAppear() {
-                    withAnimation(self.repeatingAnimation) { self.size = 1.1 }
-                }
-            
-            Text("🧻")
-                .font(.system(size: 200))
-                .rotationEffect(.degrees(220))
-                .offset(x: 200, y: 100)
-                .blur(radius: 15)
-                .scaleEffect(size)
-                .onAppear() {
-                    withAnimation(self.repeatingAnimation) { self.size = 1.1 }
-                }
-            
-            Text("✂️")
-                .font(.system(size: 200))
-                .rotationEffect(.degrees(220))
-                .offset(x: -250, y: 450)
-                .blur(radius: 15)
-                .scaleEffect(size)
-                .onAppear() {
-                    withAnimation(self.repeatingAnimation) { self.size = 1.1 }
-                }
-            
+        ZStack {            
             VStack(spacing: 30) {
                 HStack {
                     Text("Logic Game")
                     Spacer()
-                    Button {
-                        restartGameState = true
-                    } label: {
-                        Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
-                            .foregroundColor(.primary)
-                    }
-                    .font(.system(size: 30, design: .rounded))
-                    .alert(isPresented: $restartGameState) {
-                        Alert(
-                            title: Text("Restart the game"),
-                            message: Text("Are you sure you want to restart the game?"),
-                            primaryButton: .destructive(Text("Restart")) {
-                                restartGame()
-                            },
-                            secondaryButton: .cancel()
-                        )
-                    }
-                    Spacer()
-                    
                     Text("Score: ")
+                        .font(.system(size: 20, design: .rounded)) +
+                    Text("\(game.userScore)")
                         .font(.system(size: 20, design: .rounded))
-                    +
-                    Text("\(player.score)")
-                        .font(.system(size: 20, design: .rounded))
-                        .foregroundColor(player.result == "Correct" ? .green : (player.result == "Wrong" ? .red : .primary))
+                        .foregroundColor(game.roundResult == "Correct" ? .green : (game.roundResult == "Wrong" ? .red : .primary))
                 }
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .padding()
                 .background(.ultraThinMaterial)
                 
                 HStack {
-                    Text("Round \(player.question)/10")
+                    Text("Round \(game.questionNumber)/\(Int(game.totalQuestionNumber))")
                 }
                 .font(.system(size: 20, design: .rounded))
                 .padding()
@@ -103,17 +39,20 @@ struct GameView: View {
                 .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 10)
                 
                 VStack {
-                    Text("AI chooses \(aiMoves[winningMove]) and has to ") +
-                    Text(aiWin == true ? "win" : "lose")
-                        .font(.title2.weight(.bold))
+                    Text("AI chooses ") +
+                    Text("\(game.aiMoves[game.winningMove])")
+                        .font(.title3.weight(.bold))
+                    + Text(" and has to ") +
+                    Text(game.aiWin == true ? "win" : "lose")
+                        .font(.title3.weight(.bold))
                     + Text(".")
                     HStack(spacing: 15) {
-                        ForEach(aiMoves, id: \.self) { move in
+                        ForEach(game.aiMoves, id: \.self) { move in
                             Text(move)
                                 .font(.system(size: 60))
                                 .padding(15)
                                 .background(
-                                    aiMoves.firstIndex(of: move) == winningMove ? ( aiWin == true ? .green.opacity(0.6) :  .red.opacity(0.5) ) : .white.opacity(0.0)
+                                    game.aiMoves.firstIndex(of: move) == game.winningMove ? ( game.aiWin == true ? .green.opacity(0.6) :  .red.opacity(0.5) ) : .white.opacity(0.0)
                                 )
                                 .cornerRadius(15)
                         }
@@ -128,7 +67,7 @@ struct GameView: View {
                 VStack {
                     Text("What do you choose?")
                     HStack(spacing: 15) {
-                        ForEach(playerMoves, id: \.self) { move in
+                        ForEach(game.userMoves, id: \.self) { move in
                             Button(move) {
                                 roundCheck(playerMove: move)
                             }
@@ -149,18 +88,18 @@ struct GameView: View {
                 
             }
             .alert("Game Finished", isPresented: $endGameState) {
-                Button("Restart") { restartGame() }
+                Button("Restart") { game.restartGame() }
             } message: {
-                Text("You got \(player.score) points.")
+                Text("You got \(game.userScore) points.")
             }
         }
     }
     
     
     func roundCheck(playerMove: String) {
-        let aiMove = aiMoves[winningMove]
+        let aiMove = game.aiMoves[game.winningMove]
         
-        switch (aiMove, aiWin, playerMove) {
+        switch (aiMove, game.aiWin, playerMove) {
         case
             ("🪨", true, "✂️"),
             ("🪨", false, "✂️"),
@@ -170,46 +109,32 @@ struct GameView: View {
             ("🪨", false, "🧻"),
             ("🧻", false, "✂️"),
             ("🧻", true, "🪨"):
-            withAnimation { player.score += 1 }
-            player.result = "Correct"
+            withAnimation { game.userScore += 1 }
+            game.roundResult = "Correct"
         default:
-            withAnimation { player.score -= 1 }
-            player.result = "Wrong"
+            withAnimation { game.userScore -= 1 }
+            game.roundResult = "Wrong"
         }
         
-        lastHistory.append("\(player.question):")
-        lastHistory.append(aiMove)
-        lastHistory.append(aiWin == true ? "AI Win" : "AI Lose")
-        lastHistory.append(playerMove)
-        lastHistory.append(player.result)
-        player.history.append(lastHistory)
-        lastHistory = [String]()
+        lastRoundHistory.append("\(game.questionNumber):")
+        lastRoundHistory.append(aiMove)
+        lastRoundHistory.append(game.aiWin == true ? "AI Win" : "AI Lose")
+        lastRoundHistory.append(playerMove)
+        lastRoundHistory.append(game.roundResult)
+        game.history.append(lastRoundHistory)
+        lastRoundHistory = [String]()
         
-        aiWin.toggle()
-        player.question += 1
-        if player.question == 11 {
-            player.question = 10
+        game.aiWin.toggle()
+        game.questionNumber += 1
+        if game.questionNumber == Int(game.totalQuestionNumber + 1) {
+            game.questionNumber = Int(game.totalQuestionNumber)
             endGameState = true
         } else {
-            
             withAnimation {
-                winningMove = Int.random(in: 0...2)
-                aiMoves.shuffle()
-                playerMoves.shuffle()
+                game.winningMove = Int.random(in: 0...2)
+                game.aiMoves.shuffle()
+                game.userMoves.shuffle()
             }
-        }
-    }
-    
-    func restartGame() {
-        aiWin.toggle()
-        player.history = [[String]]()
-        player.result = ""
-        withAnimation {
-            player.score = 0
-            player.question = 1
-            winningMove = Int.random(in: 0...2)
-            aiMoves = ["🪨", "🧻", "✂️"]
-            playerMoves.shuffle()
         }
     }
 }
@@ -217,6 +142,6 @@ struct GameView: View {
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
         GameView()
-            .environmentObject(PlayerInfo())
+            .environmentObject(Game())
     }
 }

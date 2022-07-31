@@ -11,6 +11,10 @@
 		520CF1682894221600FF9235 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520CF1672894221600FF9235 /* HistoryView.swift */; };
 		520CF16B2894250200FF9235 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520CF16A2894250200FF9235 /* Color+Extension.swift */; };
 		520CF16D2894254000FF9235 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520CF16C2894253F00FF9235 /* View+Extension.swift */; };
+		526805752896972C007DC1F5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526805742896972C007DC1F5 /* SettingsView.swift */; };
+		526805772896C193007DC1F5 /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526805762896C193007DC1F5 /* GuideView.swift */; };
+		5268057A289745F8007DC1F5 /* EmojisBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52680579289745F8007DC1F5 /* EmojisBackground.swift */; };
+		5268057C2897476A007DC1F5 /* GradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5268057B2897476A007DC1F5 /* GradientBackground.swift */; };
 		52B8E557288EF10D00EAD88A /* Reverse_Rock_Paper_ScissorsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B8E556288EF10D00EAD88A /* Reverse_Rock_Paper_ScissorsApp.swift */; };
 		52B8E559288EF10D00EAD88A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B8E558288EF10D00EAD88A /* ContentView.swift */; };
 		52B8E55B288EF10D00EAD88A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52B8E55A288EF10D00EAD88A /* Assets.xcassets */; };
@@ -22,6 +26,10 @@
 		520CF1672894221600FF9235 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		520CF16A2894250200FF9235 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		520CF16C2894253F00FF9235 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		526805742896972C007DC1F5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		526805762896C193007DC1F5 /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
+		52680579289745F8007DC1F5 /* EmojisBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisBackground.swift; sourceTree = "<group>"; };
+		5268057B2897476A007DC1F5 /* GradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientBackground.swift; sourceTree = "<group>"; };
 		52B8E553288EF10D00EAD88A /* Reverse Rock Paper Scissors.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reverse Rock Paper Scissors.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B8E556288EF10D00EAD88A /* Reverse_Rock_Paper_ScissorsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reverse_Rock_Paper_ScissorsApp.swift; sourceTree = "<group>"; };
 		52B8E558288EF10D00EAD88A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +53,8 @@
 			children = (
 				520CF165289420D300FF9235 /* GameView.swift */,
 				520CF1672894221600FF9235 /* HistoryView.swift */,
+				526805742896972C007DC1F5 /* SettingsView.swift */,
+				526805762896C193007DC1F5 /* GuideView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -56,6 +66,15 @@
 				520CF16C2894253F00FF9235 /* View+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		52680578289745D4007DC1F5 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				52680579289745F8007DC1F5 /* EmojisBackground.swift */,
+				5268057B2897476A007DC1F5 /* GradientBackground.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		52B8E54A288EF10D00EAD88A = {
@@ -77,6 +96,7 @@
 		52B8E555288EF10D00EAD88A /* Reverse Rock Paper Scissors */ = {
 			isa = PBXGroup;
 			children = (
+				52680578289745D4007DC1F5 /* Helpers */,
 				520CF169289424EC00FF9235 /* Extensions */,
 				520CF164289420A800FF9235 /* Views */,
 				52B8E558288EF10D00EAD88A /* ContentView.swift */,
@@ -165,9 +185,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				526805752896972C007DC1F5 /* SettingsView.swift in Sources */,
 				52B8E559288EF10D00EAD88A /* ContentView.swift in Sources */,
 				520CF16B2894250200FF9235 /* Color+Extension.swift in Sources */,
+				526805772896C193007DC1F5 /* GuideView.swift in Sources */,
 				520CF1682894221600FF9235 /* HistoryView.swift in Sources */,
+				5268057C2897476A007DC1F5 /* GradientBackground.swift in Sources */,
+				5268057A289745F8007DC1F5 /* EmojisBackground.swift in Sources */,
 				520CF166289420D300FF9235 /* GameView.swift in Sources */,
 				520CF16D2894254000FF9235 /* View+Extension.swift in Sources */,
 				52B8E557288EF10D00EAD88A /* Reverse_Rock_Paper_ScissorsApp.swift in Sources */,

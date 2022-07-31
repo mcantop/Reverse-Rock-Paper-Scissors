@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @EnvironmentObject var player: PlayerInfo
+    @EnvironmentObject var game: Game
     
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Color.gray.opacity(0.6), Color.gray.opacity(0.9)], startPoint: .topLeading, endPoint: .bottomTrailing)
-                .ignoresSafeArea()
             
             VStack(spacing: 30) {
                 HStack {
@@ -21,9 +19,9 @@ struct HistoryView: View {
                     Spacer()
                     Text("Score: ")
                         .font(.system(size: 20, design: .rounded)) +
-                    Text("\(player.score)")
+                    Text("\(game.userScore)")
                         .font(.system(size: 20, design: .rounded))
-                        .foregroundColor(player.result == "Correct" ? .green : (player.result == "Wrong" ? .red : .primary))
+                        .foregroundColor(game.roundResult == "Correct" ? .green : (game.roundResult == "Wrong" ? .red : .primary))
                 }
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .padding()
@@ -31,7 +29,7 @@ struct HistoryView: View {
                 
                 VStack {
                     ScrollView(showsIndicators: false) {
-                        if player.history.isEmpty {
+                        if game.history.isEmpty {
                             Text("No history yet.")
                                 .font(.system(size: 20, design: .rounded))
                                 .padding()
@@ -40,7 +38,7 @@ struct HistoryView: View {
                                 .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 10)
                         }
                         
-                        ForEach(player.history.reversed(), id: \.self) { array in
+                        ForEach(game.history.reversed(), id: \.self) { array in
                             HStack(spacing: 20) {
                                 ForEach(array, id: \.self) {
                                     Text($0)
@@ -64,6 +62,6 @@ struct HistoryView: View {
 struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
         HistoryView()
-            .environmentObject(PlayerInfo())
+            .environmentObject(Game())
     }
 }

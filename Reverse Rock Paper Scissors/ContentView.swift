@@ -7,33 +7,65 @@
 
 import SwiftUI
 
-class PlayerInfo: ObservableObject {
+class Game: ObservableObject {
     @Published var history = [[String]]()
-    @Published var score = Int()
-    @Published var result = String()
-    @Published var question = 1
+    @Published var userScore = Int()
+    @Published var roundResult = String()
+    @Published var questionNumber = 1
+    @Published var totalQuestionNumber = 10.0
+    @Published var aiWin = false
+    @Published var winningMove = Int.random(in: 0...2)
+    @Published var aiMoves = ["🪨", "🧻", "✂️"]
+    @Published var userMoves = ["🪨", "🧻", "✂️"].shuffled()
+    
+    func restartGame() {
+        aiWin.toggle()
+        history = [[String]]()
+        roundResult = ""
+        withAnimation {
+            userScore = 0
+            questionNumber = 1
+            winningMove = Int.random(in: 0...2)
+            aiMoves = ["🪨", "🧻", "✂️"]
+            userMoves.shuffle()
+        }
+    }
 }
 
 struct ContentView: View {
-    @StateObject var player = PlayerInfo()
+    @StateObject var game = Game()
     
     var body: some View {
-        
-        TabView {
-            GameView()
-                .environmentObject(player)
-                .tabItem {
-                    Label("Logic Game", systemImage: "gamecontroller")
-                }
-            
-            HistoryView()
-                .environmentObject(player)
-                .tabItem {
-                    Label("History", systemImage: "archivebox.fill")
-                }
-                .badge(player.question - 1)
+        ZStack {            
+            TabView {
+                GameView()
+                    .tabItem {
+                        Label("Play", systemImage: "gamecontroller")
+                    }
+                    .background(EmojisBackground())
+
+                HistoryView()
+                    .tabItem {
+                        Label("History", systemImage: "archivebox.fill")
+                    }
+                    .background(GradientBackground())
+                    .badge(game.questionNumber - 1)
+                
+                GuideView()
+                    .tabItem {
+                        Label("Guide", systemImage: "book")
+                    }
+                    .background(GradientBackground())
+                
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
+                    .background(GradientBackground())
+            }
+            .environmentObject(game)
+            .tabViewStyle(selectedItemColor: .primary, badgeColor: .secondary)
         }
-        .tabViewStyle(selectedItemColor: .primary, badgeColor: .secondary)
     }
 }
 
