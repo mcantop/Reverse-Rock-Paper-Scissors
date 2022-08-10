@@ -13,6 +13,8 @@ struct HistoryView: View {
     var body: some View {
         ZStack {
             
+            GradientBackground()
+            
             VStack(spacing: 30) {
                 HStack {
                     Text("History")

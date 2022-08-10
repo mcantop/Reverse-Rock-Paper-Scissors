@@ -18,8 +18,8 @@ struct EmojisBackground: View {
     
     var body: some View {
         ZStack {
-        LinearGradient(colors: [Color.gray.opacity(0.6), Color.gray.opacity(0.9)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            .ignoresSafeArea()
+            
+        GradientBackground()
         
         Text("🪨")
             .font(.system(size: 200))

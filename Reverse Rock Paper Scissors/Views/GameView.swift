@@ -12,9 +12,10 @@ struct GameView: View {
     @State private var lastRoundHistory = [String]()
     @State private var endGameState = false
 
-    
     var body: some View {
-        ZStack {            
+        ZStack {
+            EmojisBackground()
+            
             VStack(spacing: 30) {
                 HStack {
                     Text("Logic Game")

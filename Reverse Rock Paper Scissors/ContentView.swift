@@ -36,32 +36,29 @@ struct ContentView: View {
     @StateObject var game = Game()
     
     var body: some View {
-        ZStack {            
+        ZStack {
+            
             TabView {
                 GameView()
                     .tabItem {
                         Label("Play", systemImage: "gamecontroller")
                     }
-                    .background(EmojisBackground())
 
                 HistoryView()
                     .tabItem {
                         Label("History", systemImage: "archivebox.fill")
                     }
-                    .background(GradientBackground())
                     .badge(game.questionNumber - 1)
                 
                 GuideView()
                     .tabItem {
                         Label("Guide", systemImage: "book")
                     }
-                    .background(GradientBackground())
                 
                 SettingsView()
                     .tabItem {
                         Label("Settings", systemImage: "gearshape.fill")
                     }
-                    .background(GradientBackground())
             }
             .environmentObject(game)
             .tabViewStyle(selectedItemColor: .primary, badgeColor: .secondary)
